@@ -1,4 +1,4 @@
-package main.java.edu.apigateway;
+package edu.apigateway;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
