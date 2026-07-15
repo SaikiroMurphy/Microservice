@@ -8,6 +8,7 @@ import re.edu.patient_service.model.dto.request.CreatePatientRequest;
 import re.edu.patient_service.model.dto.response.PatientResponse;
 import re.edu.patient_service.service.PatientService;
 
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequiredArgsConstructor
+@RefreshScope
 @RequestMapping("/api/v1/patients")
 public class PatientController {
     private final PatientService patientService;
