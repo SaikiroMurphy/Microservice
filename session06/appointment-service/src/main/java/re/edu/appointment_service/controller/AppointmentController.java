@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import re.edu.appointment_service.model.dto.request.AppointmentRequest;
@@ -39,7 +40,7 @@ public class AppointmentController {
      * Tạo mới một lịch hẹn.
      */
     @PostMapping
-    @io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker(name = "doctorServiceCB", fallbackMethod = "getDoctorFallback")
+    @CircuitBreaker(name = "doctorServiceCB", fallbackMethod = "getDoctorFallback")
     public ResponseEntity<?> createAppointment(
             @Valid @RequestBody AppointmentRequest request) {
         AppointmentResponse created = appointmentService.createAppointment(request);

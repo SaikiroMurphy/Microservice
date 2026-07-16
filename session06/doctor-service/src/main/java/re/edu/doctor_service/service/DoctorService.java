@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import re.edu.doctor_service.model.dto.request.CreateDoctorRequest;
+import re.edu.doctor_service.model.dto.response.ApiResponseError;
 import re.edu.doctor_service.model.dto.response.DoctorResponse;
 import re.edu.doctor_service.model.entity.Doctor;
 import re.edu.doctor_service.repository.DoctorRepository;
@@ -46,5 +48,19 @@ public class DoctorService {
                         doctor.getStatus()
                 ))
                 .toList();
+    }
+
+    public DoctorResponse getDoctorById(Long id) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException());
+
+        return new DoctorResponse(
+                doctor.getId(),
+                doctor.getFullName(),
+                doctor.getSpecialization(),
+                doctor.getExperienceYears(),
+                doctor.getEmail(),
+                doctor.getStatus()
+        );
     }
 }
