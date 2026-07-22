@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class BillController {
 
     private final BillService billService;
-    private final WarehouseClient warehouseClient;
+    // private final WarehouseClient warehouseClient;
 
     @PostMapping("/bill")
     public ResponseEntity<BillResponse> create(
@@ -34,13 +34,13 @@ public class BillController {
         return ResponseEntity.ok(billService.create(request));
     }
 
-    @GetMapping("/warehouse")
-    @CircuitBreaker(name = "warehouseCB", fallbackMethod = "checkWarehouseFallback")
-    public ResponseEntity<Object> getStorage(@RequestParam String param) {
-        return ResponseEntity.ok(warehouseClient.checkStock(null));
-    }
+    // @GetMapping("/warehouse")
+    // @CircuitBreaker(name = "warehouseCB", fallbackMethod = "checkWarehouseFallback")
+    // public ResponseEntity<Object> getStorage(@RequestParam String param) {
+    //     return ResponseEntity.ok(warehouseClient.checkStock(null));
+    // }
     
-    public ResponseEntity<Object> checkWarehouseFallback(String param, Throwable throwable) {
-        return ResponseEntity.status(503).body("Không thể kết nối kho tổng. Hệ thống sẽ sử dụng dữ liệu tồn kho cục bộ để tiếp tục giao dịch");
-    }
+    // public ResponseEntity<Object> checkWarehouseFallback(String param, Throwable throwable) {
+    //     return ResponseEntity.status(503).body("Không thể kết nối kho tổng. Hệ thống sẽ sử dụng dữ liệu tồn kho cục bộ để tiếp tục giao dịch");
+    // }
 }

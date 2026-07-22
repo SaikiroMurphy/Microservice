@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import re.edu.pharmacy_service.model.entity.*;
 import re.edu.pharmacy_service.model.mapper.BillDetailMapper;
 import re.edu.pharmacy_service.model.mapper.BillMapper;
+import re.edu.pharmacy_service.event.OrderEvent;
+import re.edu.pharmacy_service.kafka.OrderProducer;
 import re.edu.pharmacy_service.model.dto.request.*;
 import re.edu.pharmacy_service.model.dto.response.*;
 import re.edu.pharmacy_service.repository.BillDetailRepository;
@@ -27,6 +29,8 @@ public class BillService {
 
     private final BillDetailRepository billDetailRepository;
     private final BillDetailMapper billDetailMapper;
+
+    private final OrderProducer orderProducer;
 
     @Value("${pharmacy.vat-rate}")
     private BigDecimal vatRate;
@@ -55,6 +59,18 @@ public class BillService {
         response.setVatRate(vatRate);
         response.setVatAmount(response.getTotalAmount().multiply(vatRate));
         response.setFinalAmount(response.getTotalAmount().add(response.getVatAmount()));
+
+        // Gửi sự kiện đến Kafka
+        details.forEach(detail -> {
+            OrderEvent event = OrderEvent.builder()
+                    .orderId(savedBill.getId())
+                    .medicineId(detail.getProductId())
+                    .quantity(detail.getQuantity())
+                    .timestamp(savedBill.getCreatedAt())
+                    .build();
+
+            orderProducer.send(event);
+        });
 
         return response;
     }
